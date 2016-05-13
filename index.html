@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>TSC by BerkeleyAutomation</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>TSC</h1>
+        <h2>Transition State Clustering</h2>
+        <a href="https://github.com/BerkeleyAutomation/tsc" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <p><img src="http://www.cs.berkeley.edu/%7Eanimesh.garg/research/images/circleProcess-2.jpg" alt="ISRR Teaser Image"></p>
+
+<h3>
+<a id="abstract" class="anchor" href="#abstract" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Abstract</h3>
+
+<p>We present a new unsupervised segmentation algorithm, Transition State Clustering (TSC), which combines results from hybrid dynamical systems and Bayesian non-parametric statistics to segment kinematic recordings of robotic surgical procedures.</p>
+
+<p>TSC treats each demonstration trajectory as a noisy observation of an underlying switched linear dynamical system (SLDS) and clusters spatially and temporally similar transition events (i.e., switches in the linear regime).
+TSC uses a hierarchical Dirichlet Process Gaussian Mixture Model to avoid selecting the number of segments <em>a priori</em>.
+We compare TSC to five alternatives on the respective algorithms' correspondence to a known ground truth in a synthetic example: Gaussian Mixture Model, Gaussian Hidden Markov Model, Coresets, Gaussian Hidden Semi-Markov Model, and an Autoregressive Hidden Markov Model.</p>
+
+<p>We find that when demonstrations are corrupted with process and observation noise, TSC recovers the ground truth 49% more accurately than alternatives.
+Furthermore, TSC runs 100x faster than the Autoregressive Models which require expensive MCMC-based inference. 
+We also evaluated TSC on 67 recordings of surgical needle passing and suturing.
+We supplemented the kinematic recordings with manually annotated visual features denoting grasp and penetration conditions.
+On this dataset, TSC finds 83% of needle passing transitions and 73% of the suturing transitions annotated by human experts.</p>
+
+<h3>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h3>
+
+<ul>
+<li>
+<a href="http://www.cs.berkeley.edu/%7Eanimesh.garg/files/ISRR2015_Krishnan-Garg_TSC.pdf">Transition State Clustering: Unsupervised Surgical Trajectory Segmentation For Robot Learning</a>. Sanjay Krishnan<em>, Animesh Garg</em>, Sachin Patil, Colin Lea, Greg Hager, Pieter Abbeel, Ken Goldberg (* denotes equal contribution).
+International Symposium on Robotics Research (ISRR), 2015.</li>
+</ul>
+
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p><a href="http://sanjay.krishnan.tech">Sanjay Krishnan</a>, <a href="http://animesh.garg.tech">Animesh Garg</a>, <a href="http://rll.berkeley.edu/%7Esachin/">Sachin Patil</a>, <a href="http://colinlea.com">Colin Lea</a>, <a href="http://www.cs.jhu.edu/%7Ehager/">Gregory Hager</a>, <a href="http://www.cs.berkeley.edu/%7Epabbeel/">Pieter Abbeel</a>, <a href="http://goldberg.berkeley.edu">Ken Goldberg</a></p>
+
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Please contact <a href="http://sanjay.krishnan.tech">Sanjay Krishnan</a> and <a href="http://animesh.garg.tech">Animesh Garg</a> for more information.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/BerkeleyAutomation/tsc/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/BerkeleyAutomation/tsc/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/BerkeleyAutomation/tsc"></a> is maintained by <a href="https://github.com/BerkeleyAutomation">BerkeleyAutomation</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
