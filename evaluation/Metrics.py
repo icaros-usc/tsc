@@ -206,7 +206,7 @@ def evaluate(seq1, seq2, method='jaccard', **options):
      seq2: reference -- ground truth	
     method: which method to use. defaults to Jaccard (intersection over union)
     """
-    if type == 'jaccard':
+    if method == 'jaccard':
         if 'tol' in options.keys():
             return jaccard(seq1, seq2, tol=options['tol'])
         else:

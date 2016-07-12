@@ -6,6 +6,7 @@ from generate.TrajectoryDataGenerator import *
 from tsc.tsc import TransitionStateClustering
 from alternates.clustering import TimeVaryingGaussianMixtureModel, HMMGaussianMixtureModel, CoresetSegmentation
 from alternates.bayes import HiddenSemiMarkovModel, AutoregressiveMarkovModel
+from alternates.em import EMForwardBackward
 from evaluation.Evaluator import *
 from evaluation.Metrics import *
 
@@ -28,19 +29,33 @@ print a.segmentation
 sys_params = {'k':3,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
 
 a = TransitionStateClustering(window_size=3, normalize=False, pruning=0.3,delta=-1)
-b = TimeVaryingGaussianMixtureModel(hard_param=3)
-c = HMMGaussianMixtureModel(n_components=3)
-d = CoresetSegmentation(n_components=4)
-e = HiddenSemiMarkovModel()
+#b = TimeVaryingGaussianMixtureModel(hard_param=3)
+#c = HMMGaussianMixtureModel(n_components=3)
+#d = CoresetSegmentation(n_components=4)
+b = EMForwardBackward(n_components=3)
 #f = AutoregressiveMarkovModel()
 
-plotY1Y2(run_sweep_experiment(sys_params, 'observation', [0.1, 0.25, 0.5, 0.75, 1], [a,b,c,d,e], np.ones((2,1)), lambda x,y: evaluate(x,y,'seg_acc', thresh=0.75), N=2, k=10),
+
+"""
+plotY1Y2(run_sweep_experiment(sys_params, 'observation', [0.1, 0.25, 0.5, 0.75, 1], [a, b], np.ones((2,1)), lambda x,y: evaluate(x,y,'jaccard', thresh=0.75), N=10, k=10),
              "(A) HF Observation Noise",
              "HF Noise",
              "Segment Accuracy",
-             legend=["TSC", "GMM", "GMM+HMM", "Coreset", "HSMM", "ARHMM"],
+             legend=["GMM-TSC", "EM-TSC"],
              loc = 'lower left',
              filename="output1.png",
+             ylim=0.0,
+             xlim=0.1)
+"""
+
+
+plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.1, 0.5, 1.0, 1.5, 2], [a, b], np.ones((2,1)), lambda x,y: evaluate(x,y,'jaccard', thresh=0.75), N=10, k=10),
+             "(B) LF Observation Noise",
+             "LF Noise",
+             "Segment Accuracy",
+             legend=["GMM-TSC", "EM-TSC"],
+             loc = 'lower left',
+             filename="output2.png",
              ylim=0.0,
              xlim=0.1)
 

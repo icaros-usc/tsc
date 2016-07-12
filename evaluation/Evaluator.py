@@ -107,7 +107,10 @@ def run_sweep_experiment(base_params,
 					 	 				  metric,
 					 	 				  N, k,lm, dp)
 		print "Result vector", np.mean(result,axis=0)
-		Y.append(np.mean(result,axis=0))
+		
+		a = np.mean(result,axis=0)
+		
+		Y.append(a)
 
 	return (X,Y)
 
@@ -141,7 +144,7 @@ def plotY1Y2(points_tuple,
 		ya = [j[i] for j in Y]
 		plt.plot(X, ya, shape[i], linewidth=2.5,markersize=7,color=colors[i])
 
-	#plt.legend(legend,loc=loc)
+	plt.legend(legend,loc=loc)
 	plt.title(title)
 	plt.xlabel(xaxis,fontproperties=fprop)
 	plt.ylabel(yaxis,fontproperties=fprop)
