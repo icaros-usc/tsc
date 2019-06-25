@@ -8,147 +8,150 @@ import numpy as np
 from generate.TrajectoryDataGenerator import *
 import datetime
 
-#system is a demonstration system
-#algorithm is 
-#metric a function seq x seq -> R
-#K is the number of demonstrations
-#also takes in an algorithm parameters
-def run_1_time(system, 
-				algorithm,
-				initalcond,
-				metric, 
-				k=20,
-				lm=0, 
-				dp=0):
 
-	timestart = datetime.datetime.now()
+# system is a demonstration system
+# algorithm is
+# metric a function seq x seq -> R
+# K is the number of demonstrations
+# also takes in an algorithm parameters
+def run_1_time(system,
+               algorithm,
+               initalcond,
+               metric,
+               k=20,
+               lm=0,
+               dp=0):
+    timestart = datetime.datetime.now()
 
-	a = copy.deepcopy(algorithm)
-		
-	gtlist = []
-	for j in range(0,k):
-		t = sampleDemonstrationFromSystem(system,initalcond,lm=lm, dp=dp)
-		a.addDemonstration(np.squeeze(t[0]))
-		gtlist.append(t[1])
+    a = copy.deepcopy(algorithm)
 
-	a.fit()
-	result = []
-	for j in range(0,k):
-		a.segmentation[j].sort()
-		result.append(metric(a.segmentation[j], gtlist[j]))
+    gtlist = []
+    for j in range(0, k):
+        t = sampleDemonstrationFromSystem(system, initalcond, lm=lm, dp=dp)
+        a.addDemonstration(np.squeeze(t[0]))
+        gtlist.append(t[1])
 
-	print "Run Time",k, algorithm.__class__.__name__, datetime.datetime.now() - timestart
+    a.fit()
+    result = []
+    for j in range(0, k):
+        a.segmentation[j].sort()
+        result.append(metric(a.segmentation[j], gtlist[j]))
 
-	return (np.mean(result), np.var(result))
+    print("Run Time", k, algorithm.__class__.__name__, datetime.datetime.now() - timestart)
 
-#on a list of systems it applies
-#a list of algorithms
-def run_k_system(system_list, 
-					 algorithm_list,
-					 initalcond,
-					 metric, 
-					 k=20,
-					 lm=0, 
-					 dp=0):
+    return np.mean(result), np.var(result)
 
-	result = np.zeros((len(system_list),len(algorithm_list)))
-	for i,sys in enumerate(system_list):
-		for j,a in enumerate(algorithm_list):
-			result[i,j] = run_1_time(sys,a,initalcond,metric,k,lm,dp)[0]
 
-	return result
+# on a list of systems it applies
+# a list of algorithms
+def run_k_system(system_list,
+                 algorithm_list,
+                 initalcond,
+                 metric,
+                 k=20,
+                 lm=0,
+                 dp=0):
+    result = np.zeros((len(system_list), len(algorithm_list)))
+    for i, sys in enumerate(system_list):
+        for j, a in enumerate(algorithm_list):
+            result[i, j] = run_1_time(sys, a, initalcond, metric, k, lm, dp)[0]
 
-#runs N trials of the same system specs
+    return result
+
+
+# runs N trials of the same system specs
 def run_comparison_experiment(params,
-							  algorithm_list,
-					 		  initalcond,
-					 		  metric,
-					 		  N=5, 
-					 		  k=20,
-					 		  lm=0, 
-					 		  dp=0):
-	system_list = []
-	for i in range(0, N):
-		system_list.append(createNewDemonstrationSystem(k=params['k'],
-									   dims=params['dims'], 
-									   observation=params['observation'], 
-									   resonance=params['resonance'], 
-									   drift=params['drift']))
+                              algorithm_list,
+                              initalcond,
+                              metric,
+                              N=5,
+                              k=20,
+                              lm=0,
+                              dp=0):
+    system_list = []
+    for i in range(0, N):
+        system_list.append(createNewDemonstrationSystem(k=params['k'],
+                                                        dims=params['dims'],
+                                                        observation=params['observation'],
+                                                        resonance=params['resonance'],
+                                                        drift=params['drift']))
 
-	return run_k_system(system_list, 
-						algorithm_list, 
-						initalcond, 
-						metric, 
-						k=k,
-					 	lm=0, 
-					 	dp=0)
+    return run_k_system(system_list,
+                        algorithm_list,
+                        initalcond,
+                        metric,
+                        k=k,
+                        lm=0,
+                        dp=0)
 
-#can only sweep noise right now
+
+# can only sweep noise right now
 def run_sweep_experiment(base_params,
-						 sweep_param,
-						 sweep_param_list,
-						 algorithm_list,
-						 initalcond,
-					 	 metric,
-					 	 N=5, 
-					 	 k=20,
-					 	 lm=0, 
-					 	 dp=0):
-	X = []
-	Y = []
+                         sweep_param,
+                         sweep_param_list,
+                         algorithm_list,
+                         initalcond,
+                         metric,
+                         N=5,
+                         k=20,
+                         lm=0,
+                         dp=0):
+    X = []
+    Y = []
 
-	for s in sweep_param_list:
-		X.append(s)
-		params = copy.deepcopy(base_params)
-		params[sweep_param] = [params[sweep_param][0], s]
-		result = run_comparison_experiment(params,
-										  algorithm_list,
-										  initalcond,
-					 	 				  metric,
-					 	 				  N, k,lm, dp)
-		print "Result vector", np.mean(result,axis=0)
-		
-		a = np.mean(result,axis=0)
-		
-		Y.append(a)
+    for s in sweep_param_list:
+        X.append(s)
+        params = copy.deepcopy(base_params)
+        params[sweep_param] = [params[sweep_param][0], s]
+        result = run_comparison_experiment(params,
+                                           algorithm_list,
+                                           initalcond,
+                                           metric,
+                                           N, k, lm, dp)
+        print
+        "Result vector", np.mean(result, axis=0)
 
-	return (X,Y)
+        a = np.mean(result, axis=0)
 
-#plots the data structure that comes out of the parameter
-#sweep
+        Y.append(a)
+
+    return (X, Y)
+
+
+# plots the data structure that comes out of the parameter
+# sweep
 def plotY1Y2(points_tuple,
              title,
              xaxis,
              yaxis,
              legend=[],
-             loc = 'upper right',
+             loc='upper right',
              filename="output.png",
              ylim=0,
              xlim=0):
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager, rcParams
+    rcParams.update({'figure.autolayout': True})
+    rcParams.update({'font.size': 18})
+    fprop = font_manager.FontProperties(fname='/Library/Fonts/Microsoft/Gill Sans MT.ttf')
 
-	import matplotlib.pyplot as plt
-	from matplotlib import font_manager, rcParams
-	rcParams.update({'figure.autolayout': True})
-	rcParams.update({'font.size': 18})
-	fprop = font_manager.FontProperties(fname='/Library/Fonts/Microsoft/Gill Sans MT.ttf') 
+    plt.figure()
+    colors = ['#00ff99', '#0099ff', '#ffcc00', '#ff5050', '#9900cc', '#5050ff', '#99cccc', '#0de4f6']
+    shape = ['s-', 'o-', '^-', 'v-', 'x-', 'h-']
 
-	plt.figure() 
-	colors = ['#00ff99','#0099ff','#ffcc00','#ff5050','#9900cc','#5050ff','#99cccc','#0de4f6']
-	shape = ['s-', 'o-', '^-', 'v-', 'x-', 'h-']
+    X = points_tuple[0]
+    Y = points_tuple[1]
+    num_algos = len(Y[0])
 
-	X = points_tuple[0]
-	Y = points_tuple[1]
-	num_algos = len(Y[0])
+    for i in range(0, num_algos):
+        ya = [j[i] for j in Y]
+        plt.plot(X, ya, shape[i], linewidth=2.5, markersize=7, color=colors[i])
 
-	for i in range(0, num_algos):
-		ya = [j[i] for j in Y]
-		plt.plot(X, ya, shape[i], linewidth=2.5,markersize=7,color=colors[i])
-
-	plt.legend(legend,loc=loc)
-	plt.title(title)
-	plt.xlabel(xaxis,fontproperties=fprop)
-	plt.ylabel(yaxis,fontproperties=fprop)
-	plt.ylim(ymin=ylim) 
-	plt.xlim(xmin=xlim, xmax=X[len(X)-1])
-	plt.grid(True)
-	plt.savefig(filename,bbox_inches='tight')
+    plt.legend(legend, loc=loc)
+    plt.title(title)
+    plt.xlabel(xaxis, fontproperties=fprop)
+    plt.ylabel(yaxis, fontproperties=fprop)
+    plt.ylim(ymin=ylim)
+    plt.xlim(xmin=xlim, xmax=X[len(X) - 1])
+    plt.grid(True)
+    plt.savefig(filename, bbox_inches='tight')
